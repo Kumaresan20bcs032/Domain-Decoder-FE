@@ -5,10 +5,14 @@ import { successToaster, errorToaster } from "../Services/toaster";
 import { useSearchParams } from "react-router";
 import ToasterComponent from "../Components/ToasterComponent";
 
+/**
+ * 
+ * @returns This page is related to domain(host) dns lookup which provides the information about domain records.
+ */
 const DnsLookUp = () => {
     const [loader, setLoader] = useState(false);
     const [dnsData, setDnsData] = useState(null);
-    const [color] = useState("#14B8A6"); // Tailwind teal-400 spinner color
+    const [color] = useState("#14B8A6");
     const [host, setHost] = useState("");
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -20,6 +24,7 @@ const DnsLookUp = () => {
         }
     }, []);
 
+    // Call the dns lookup api to get the details.
     const fetchDnsData = async (domain, showToast = true) => {
         setLoader(true);
         try {
@@ -33,6 +38,7 @@ const DnsLookUp = () => {
         }
     };
 
+    // This function will call when the user summit the button.
     const handleSearch = () => {
         if (!host.trim()) {
             errorToaster("Please enter a domain.");
@@ -42,13 +48,10 @@ const DnsLookUp = () => {
         fetchDnsData(host, true);
     };
 
+    // This will load the incoming data dynamically.
     const renderData = (data) => {
-        if (
-            typeof data === "string" ||
-            typeof data === "number" ||
-            typeof data === "boolean" ||
-            data === null
-        ) {
+        if (typeof data === "string" || typeof data === "number" ||
+            typeof data === "boolean" || data === null) {
             return (
                 <span className="text-gray-900 dark:text-gray-100 font-medium break-words">
                     {String(data)}
@@ -58,25 +61,29 @@ const DnsLookUp = () => {
         if (Array.isArray(data)) {
             return (
                 <ul className="list-disc list-inside space-y-1 ml-5 text-gray-800 dark:text-gray-300">
-                    {data.map((item, idx) => (
-                        <li key={idx}>{renderData(item)}</li>
-                    ))}
+                    {
+                        data.map((item, idx) => (
+                            <li key={idx}>{renderData(item)}</li>
+                        ))
+                    }
                 </ul>
             );
         }
         if (typeof data === "object") {
             return (
                 <div className="ml-5 space-y-4">
-                    {Object.entries(data).map(([key, val]) => (
-                        <div key={key} className="break-words">
-                            <h4 className="text-md font-semibold text-teal-600 dark:text-teal-400 capitalize mb-1 tracking-wide">
-                                {key.replace(/([A-Z])/g, " $1")}
-                            </h4>
-                            <div className="pl-2 border-l-2 border-teal-300 dark:border-teal-700">
-                                {renderData(val)}
+                    {
+                        Object.entries(data).map(([key, val]) => (
+                            <div key={key} className="break-words">
+                                <h4 className="text-md font-semibold text-teal-600 dark:text-teal-400 capitalize mb-1 tracking-wide">
+                                    {key.replace(/([A-Z])/g, " $1")}
+                                </h4>
+                                <div className="pl-2 border-l-2 border-teal-300 dark:border-teal-700">
+                                    {renderData(val)}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    }
                 </div>
             );
         }
@@ -104,14 +111,13 @@ const DnsLookUp = () => {
                         if (e.key === "Enter") handleSearch();
                     }}
                     className="flex-grow p-4 rounded-lg text-lg placeholder-red-300
-             bg-white/30 backdrop-blur-md border border-white/30
-             shadow-lg shadow-cyan-200/30 dark:shadow-cyan-900/50
-             focus:outline-none focus:ring-4 focus:ring-teal-400
-             dark:placeholder-red-500 dark:border-white/20 dark:bg-gray-900/30
-             transition"
+                        bg-white/30 backdrop-blur-md border border-white/30
+                        shadow-lg shadow-cyan-200/30 dark:shadow-cyan-900/50
+                        focus:outline-none focus:ring-4 focus:ring-teal-400
+                        dark:placeholder-red-500 dark:border-white/20 dark:bg-gray-900/30
+                        transition"
                     aria-label="Domain Input"
                 />
-
 
                 <button
                     onClick={handleSearch}

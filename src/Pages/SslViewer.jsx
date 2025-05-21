@@ -5,10 +5,14 @@ import { successToaster, errorToaster } from "../Services/toaster";
 import { getSslViewerInformation } from "../Services/apiService";
 import { useSearchParams } from "react-router";
 
+/**
+ * 
+ * @returns This page is related to domain(host) ssl viewer which provides the information about ssl certificate.
+ */
 const SslViewer = () => {
     const [loader, setLoader] = useState(false);
     const [sslData, setSslData] = useState({});
-    const [color] = useState("#14B8A6"); // Tailwind teal-400 for spinner
+    const [color] = useState("#14B8A6");
     const [host, setHost] = useState("");
     const [searchParam, setSearchParam] = useSearchParams();
 
@@ -20,6 +24,7 @@ const SslViewer = () => {
         }
     }, []);
 
+    // Call the ssl information api to get the details.
     async function fetchSslInformation(hostValue, isToaster = true) {
         setLoader(true);
         try {
@@ -36,6 +41,7 @@ const SslViewer = () => {
         }
     }
 
+    // This function will call when the user summit the button.
     const handleSearch = () => {
         if (!host.trim()) {
             errorToaster("Please enter a host/domain.");
@@ -45,39 +51,42 @@ const SslViewer = () => {
         fetchSslInformation(host, true);
     };
 
+    // This will load the incoming data dynamically.
     const loadDataDynamically = (value, keyName = "") => {
-        if (
-            typeof value === "string" ||
-            typeof value === "boolean" ||
-            typeof value === "number" ||
-            value === null
-        ) {
+        if (typeof value === "string" || typeof value === "boolean" ||
+            typeof value === "number" || value === null) {
             return (
                 <span className="text-gray-900 dark:text-gray-100 font-medium">
                     {String(value)}
                 </span>
             );
-        } else if (Array.isArray(value)) {
+        }
+        else if (Array.isArray(value)) {
             return (
                 <ul className="list-disc list-inside space-y-1 ml-5 text-gray-800 dark:text-gray-300">
-                    {value.map((item, idx) => (
-                        <li key={idx}>{loadDataDynamically(item)}</li>
-                    ))}
+                    {
+                        value.map((item, idx) => (
+                            <li key={idx}>{loadDataDynamically(item)}</li>
+                        ))
+                    }
                 </ul>
             );
-        } else if (typeof value === "object") {
+        }
+        else if (typeof value === "object") {
             return (
                 <div className="ml-5 space-y-4">
-                    {Object.entries(value).map(([key, val]) => (
-                        <div key={key} className="break-words">
-                            <h4 className="text-md font-semibold text-teal-600 dark:text-teal-400 capitalize mb-1 tracking-wide">
-                                {key.replace(/([A-Z])/g, " $1")}
-                            </h4>
-                            <div className="pl-2 border-l-2 border-teal-300 dark:border-teal-700">
-                                {loadDataDynamically(val, key)}
+                    {
+                        Object.entries(value).map(([key, val]) => (
+                            <div key={key} className="break-words">
+                                <h4 className="text-md font-semibold text-teal-600 dark:text-teal-400 capitalize mb-1 tracking-wide">
+                                    {key.replace(/([A-Z])/g, " $1")}
+                                </h4>
+                                <div className="pl-2 border-l-2 border-teal-300 dark:border-teal-700">
+                                    {loadDataDynamically(val, key)}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    }
                 </div>
             );
         }
@@ -105,11 +114,11 @@ const SslViewer = () => {
                         if (e.key === "Enter") handleSearch();
                     }}
                     className="flex-grow p-4 rounded-lg text-lg placeholder-red-300
-             bg-white/30 backdrop-blur-md border border-white/30
-             shadow-lg shadow-cyan-200/30 dark:shadow-cyan-900/50
-             focus:outline-none focus:ring-4 focus:ring-teal-400
-             dark:placeholder-red-500 dark:border-white/20 dark:bg-gray-900/30
-             transition"
+                        bg-white/30 backdrop-blur-md border border-white/30
+                        shadow-lg shadow-cyan-200/30 dark:shadow-cyan-900/50
+                        focus:outline-none focus:ring-4 focus:ring-teal-400
+                        dark:placeholder-red-500 dark:border-white/20 dark:bg-gray-900/30
+                        transition"
                     aria-label="Domain Input"
                 />
                 <button

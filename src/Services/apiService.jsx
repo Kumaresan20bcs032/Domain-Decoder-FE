@@ -19,6 +19,9 @@ export const getDnsLookUpInformation = async (params = {}) => {
     }
 }
 
+/**
+ * @returns  This function handles the get ssl related information
+ */
 export const getSslViewerInformation = async (params = {}) => {
     try {
 
