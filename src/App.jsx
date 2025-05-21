@@ -1,6 +1,6 @@
 
 import Router from './Router';
-
+import NavBar from './Pages/NavBar';
 
 /**
  * 
@@ -10,9 +10,10 @@ function App() {
 
   return (
     <>
-
-      <Router></Router>
-
+    
+      <Router>
+        
+      </Router>
     </>
   )
 }
